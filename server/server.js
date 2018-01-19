@@ -17,6 +17,7 @@ app.use('/', routes)
 app.use(function (err, req, res, next) {
   console.log('an error has occured')
   console.log(err)
+  if (err.code === 11000) return res.send({ error: 'That email address is already in use.' })
   res.send(err)
 })
 

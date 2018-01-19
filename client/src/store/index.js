@@ -9,7 +9,8 @@ export default new Vuex.Store({
   state: {
     id: '',
     token: '',
-    isLoggedIn: false
+    isLoggedIn: false,
+    flash: ''
   },
   getters: {
     getId: state => {
@@ -20,6 +21,9 @@ export default new Vuex.Store({
     },
     getLogged: state => {
       return state.isLoggedIn
+    },
+    getFlash: state => {
+      return state.flash
     }
   },
   mutations: {
@@ -39,6 +43,9 @@ export default new Vuex.Store({
       state.id = ''
       state.token = ''
       state.isLoggedIn = false
+    },
+    mutateFlash(state, flash) {
+      state.flash = flash;
     }
   },
   actions: {
@@ -54,6 +61,9 @@ export default new Vuex.Store({
     },
     updateReset({ commit }) {
       commit('resetStore')
+    },
+    updateFlash({ commit }, flash) {
+      commit('mutateFlash', flash)
     }
   }
 })

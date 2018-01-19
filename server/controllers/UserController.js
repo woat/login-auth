@@ -6,7 +6,8 @@ exports.register = async (req, res) => {
     password: req.body.password,
   })
 
-  user.save()
+  // TODO Handle user.save() error
+  const usera = await user.save()
   const token = await user.generateAuthToken()
   res.send({ token, user })
 }

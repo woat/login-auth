@@ -45,8 +45,9 @@ UserSchema.methods.toJSON = function () {
 UserSchema.methods.generateAuthToken = function () {
   // const user = this
 
+  const access = "auth"
   // create a token containing a user.id + exp
-  const token = jwt.sign({ _id: this._id.toHexString(), exp: Date.now() + //TODO set time , access }, 'SALTHERE').toString()
+  const token = jwt.sign({ _id: this._id.toHexString(), exp: Date.now() + 3600000, access }, 'SALTHERE').toString()
   this.tokens.push({ access, token })
   return this.save().then(() => token)
 }
@@ -67,6 +68,7 @@ UserSchema.statics.findByToken = async function (token) {
   // const User = this
 
   let decoded = await jwt.verify(token, 'SALTHERE')
+  console.log(decoded.exp)
 
   return this.findOne({
     _id: decoded._id,
@@ -79,12 +81,16 @@ UserSchema.statics.findByCredentials = async function (email, password) {
   // const User = this
 
   const user = await this.findOne({ email })
+
+  if (!user) return {
+    error: 'The email address or password you entered is not valid.'
+  }
+
   const compare = promisify(bcrypt.compare)
   const hashesMatch = await compare(password, user.password)
 
-  // pass error to controller THEN throw it
-  if (!user || !hashesMatch) return {
-    error: 'The email address or password you entered is not valid'
+  if (!hashesMatch) return {
+    error: 'The email address or password you entered is not valid.'
   }
 
   return user

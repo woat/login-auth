@@ -19,6 +19,9 @@ export default {
       // Use this response to trigger success
       console.log(response)
     }
+  },
+  created() {
+    this.logout()
   }
 }
 </script>

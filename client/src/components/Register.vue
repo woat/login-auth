@@ -1,46 +1,14 @@
 <template>
   <div class="Register">
-    <section class="hero is-fullheight">
-      <div class="hero-body">
-        <div class="container">
-          <div class="columns">
-            <div class="column is-4 is-offset-4">
-              <div class="card">
-                <div class="card-content">
-
-                  <div class="field">
-                    <p class="control has-icons-left has-icons-right">
-                      <input class="input" v-model="email" type="email" placeholder="Email">
-                      <span class="icon is-small is-left">
-                        <i class="fa fa-envelope"></i>
-                      </span>
-                    </p>
-                  </div>
-
-                  <div class="field">
-                    <p class="control has-icons-left">
-                      <input class="input" v-model="password" type="password" placeholder="Password">
-                      <span class="icon is-small is-left">
-                        <i class="fa fa-lock"></i>
-                      </span>
-                    </p>
-                  </div>
-
-                  <div class="field">
-                    <p class="control">
-                      <button class="button is-info" @click='register'>
-                        Register
-                      </button>
-                    </p>
-
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+    <div class="card">
+      <h1>Register</h1>
+      <input v-model="email" type="email" placeholder="Email">
+      <input v-model="password" type="password" placeholder="Password">
+      <span class="error">{{ error }}</span>
+      <input class="submit success" @click='register' type="submit" value="Register">
+    </div>
+  </div>
+</section>
 
   </div>
 </template>
@@ -54,7 +22,8 @@ export default {
     return {
       email: '',
       password: '',
-      passwordMatch: ''
+      passwordMatch: '',
+      error: ''
     }
   },
   methods: {
@@ -63,13 +32,41 @@ export default {
         email: this.email,
         password: this.password
       }
-
       const response = await UserService.register(credentials)
+      if (response.data.error) return this.error = response.data.error
       this.$store.dispatch('updateId', response.data.user._id)
       this.$store.dispatch('updateToken', response.data.token)
       this.$store.dispatch('updateLogged', true)
-
+      this.$router.push('/profile')
     }
   }
 }
 </script>
+
+<style scoped>
+
+.Register {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.submit {
+  color: white;
+  padding: 0.5em 2em;
+  border: none;
+  font-size: 1.5em;
+  font-family: inherit;
+  transition: 0.4s;
+}
+
+.submit:hover {
+  box-shadow: 10px 10px 1px #5a856f;
+}
+
+.error {
+  margin: 0px;
+  color: #C03943;
+}
+</style>

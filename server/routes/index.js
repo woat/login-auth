@@ -10,7 +10,7 @@ function errors(fn) {
 
 router.post('/test', (req, res) => res.send({test:'test'}))
 
-router.post('/register', UserController.register)
+router.post('/register', errors(UserController.register))
 
 router.post('/login', errors(UserController.login))
 
